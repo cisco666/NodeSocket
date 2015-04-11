@@ -1,0 +1,13 @@
+{
+  "name": "NodeWebSocket",
+  "version": "0.0.1",
+  "description":"NodeJS Web Server",
+  "main":"app.js",
+  "author":"Omar Alberto Alvarez Esquivel <omar.alvarez.91@hotmail.com>",
+  "dependencies": 
+  {
+    "express": "4.11.0",
+    "socket.io":"1.2.1",
+    "serialport":"1.4.10"
+  }
+}
