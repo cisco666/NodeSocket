@@ -1,0 +1,102 @@
+<DOCTYPE html>
+<html lang="es">
+<head>
+	<title>Reader PIC Data</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="page-header">
+					<h1>WEBSOCKET CON NODE.JS <small>Desarrollado por <a href="https://www.facebook.com/nigthmare.dedavila" target="_blank">Nightmare</a></small></h1>	
+				</div>
+			</div>
+			<div class="col-md-8 col-md-offset-2">
+				<div id="panel" class="panel">
+					<div class="panel-heading">
+						DATOS RECIBIDOS
+					</div> 
+					<div class="panel-body">
+						<div id="chat"></div>
+					</div>
+				</div>
+				<div class="progress">
+				  <div id="show-progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+				    <span id='percent'></span>
+				  </div>
+				</div>	
+				<div id="alert" class="alert" role="alert">TEMPERAURA ESTABLE</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()
+	{
+		var socket=io.connect();
+		socket.on('data',function(data)
+		{
+			var dataReader=data;
+			progress=dataReader;
+		    percentLoaded = Math.ceil((progress /510 ) * 100);	
+		   	$("#show-progress").css("width",percentLoaded+"%");
+		   	$('#percent').html(percentLoaded+"%");
+			$('#chat').html(' TEMPERATURA: '+dataReader+"°C");
+
+			if (percentLoaded <= 60) 
+			{
+				$("#show-progress").addClass('progress-bar-success');
+				$("#show-progress").removeClass('progress-bar-warning');
+				$("#show-progress").removeClass('progress-bar-danger');
+				$("#alert").addClass("alert-success");
+				$("#alert").removeClass("alert-danger");
+				$("#alert").removeClass("alert-warning");
+				$("#panel").addClass("panel-success");
+				$("#panel").removeClass("panel-danger");
+				$("#panel").removeClass("panel-warning");
+				$("#alert").text('TEMPERATURA ESTABLE');
+
+			}
+			else if(percentLoaded >= 60 && percentLoaded <= 85)
+			{
+				$("#show-progress").removeClass('progress-bar-success');
+				$("#show-progress").removeClass('progress-bar-danger');
+				$("#show-progress").addClass('progress-bar-warning');
+				$("#alert").addClass("alert-warning");
+				$("#alert").removeClass("alert-success");
+				$("#alert").removeClass("alert-danger");
+				$("#panel").addClass("panel-warning");
+				$("#panel").removeClass("panel-danger");
+				$("#panel").removeClass("panel-success");
+				$("#alert").text('TEMPERATURA ALTA');
+			}
+			else if(percentLoaded >= 85)
+			{
+				$("#show-progress").removeClass('progress-bar-warning');
+				$("#show-progress").removeClass('progress-bar-success');
+				$("#show-progress").addClass('progress-bar-danger');
+				$("#alert").addClass("alert-danger");
+				$("#alert").removeClass("alert-success");
+				$("#alert").removeClass("alert-warning");
+				$("#panel").addClass("panel-danger");
+				$("#panel").removeClass("panel-success");
+				$("#panel").removeClass("panel-warning");
+				$("#alert").text('PELIGRO: TEMPERATURA INESTABLE Y MUY ALTA');
+			}
+		});
+	});
+	</script>
+</body>
+</html>
